@@ -1,0 +1,160 @@
+<?xml version="1.0"?>
+<root main_tree_to_execute="MainTree">
+    <!-- ////////// -->
+    <BehaviorTree ID="MainTree">
+        <Control ID="RecoveryNode" name="NavigateRecovery" number_of_retries="6">
+            <Control ID="PipelineSequence" name="NavigateWithReplanning">
+                <Action ID="ControllerSelector" default_controller="FollowPath" selected_controller="{controller}" topic_name="controller_selector"/>
+                <Decorator ID="RateController" hz="1.0">
+                    <Control ID="RecoveryNode" name="ComputePathToPose" number_of_retries="1">
+                        <Action ID="ComputePathToPose" goal="{goal}" path="{path}" planner_id="GridBased"/>
+                        <ReactiveFallback name="ComputePathToPoseRecoveryFallback">
+                            <Condition ID="GoalUpdated"/>
+                            <Action ID="ClearEntireCostmap" name="ClearGlobalCostmap-Context" service_name="global_costmap/clear_entirely_global_costmap"/>
+                        </ReactiveFallback>
+                    </Control>
+                </Decorator>
+                <Control ID="RecoveryNode" name="FollowPath" number_of_retries="1">
+                    <ReactiveFallback name="FollowPathRecoveryFallback">
+                        <Decorator ID="RateController" hz="3">
+                            <Inverter>
+                                <ReactiveFallback>
+                                    <Condition ID="IntersectionFree"/>
+                                    <Action ID="Wait" wait_duration="600"/>
+                                </ReactiveFallback>
+                            </Inverter>
+                        </Decorator>
+                        <Action ID="FollowPath" controller_id="{controller}" goal_checker_id="goal_checker" path="{path}"/>
+                    </ReactiveFallback>
+                    <ReactiveFallback name="FollowPathRecoveryFallback">
+                        <Condition ID="GoalUpdated"/>
+                        <Action ID="ClearEntireCostmap" name="ClearLocalCostmap-Context" service_name="local_costmap/clear_entirely_local_costmap"/>
+                    </ReactiveFallback>
+                </Control>
+            </Control>
+            <ReactiveFallback name="RecoveryFallback">
+                <Condition ID="GoalUpdated"/>
+                <Control ID="RoundRobin" name="RecoveryActions">
+                    <Sequence name="ClearingActions">
+                        <Action ID="ClearEntireCostmap" name="ClearLocalCostmap-Subtree" service_name="local_costmap/clear_entirely_local_costmap"/>
+                        <Action ID="ClearEntireCostmap" name="ClearGlobalCostmap-Subtree" service_name="global_costmap/clear_entirely_global_costmap"/>
+                    </Sequence>
+                    <Action ID="Wait" wait_duration="5"/>
+                </Control>
+            </ReactiveFallback>
+        </Control>
+    </BehaviorTree>
+    <!-- ////////// -->
+    <TreeNodesModel>
+        <Action ID="BackUp">
+            <input_port name="backup_dist">Distance to backup</input_port>
+            <input_port name="backup_speed">Speed at which to backup</input_port>
+        </Action>
+        <Action ID="ClearEntireCostmap">
+            <input_port name="service_name">please_set_service_name_in_BT_Node</input_port>
+        </Action>
+        <Action ID="ComputePathThroughPoses">
+            <input_port name="goals">Destinations to plan through</input_port>
+            <output_port name="path">Path created by ComputePathToPose node</output_port>
+            <input_port name="planner_id"/>
+            <input_port name="start">Start pose of the path if overriding current robot pose</input_port>
+        </Action>
+        <Action ID="ComputePathToPose">
+            <input_port name="goal">Destination to plan to</input_port>
+            <output_port name="path">Path created by ComputePathToPose node</output_port>
+            <input_port name="planner_id"/>
+        </Action>
+        <Action ID="ControllerSelector">
+            <input_port name="default_controller" type="std::string">the default controller to use if there is not any external topic message received.</input_port>
+            <output_port name="selected_controller" type="std::string">Selected controller by subscription</output_port>
+            <input_port name="topic_name" type="std::string">the input topic name to select the controller</input_port>
+        </Action>
+        <Decorator ID="DistanceController">
+            <input_port name="distance">Distance</input_port>
+        </Decorator>
+        <Condition ID="DistanceTraveled">
+            <input_port name="distance">Distance to check if passed</input_port>
+            <input_port name="global_frame">reference frame to check in</input_port>
+            <input_port name="robot_base_frame">Robot frame to check relative to global_frame</input_port>
+        </Condition>
+        <Action ID="FollowPath">
+            <input_port name="controller_id"/>
+            <input_port name="goal_checker_id"/>
+            <input_port name="path">Path to follow</input_port>
+        </Action>
+        <Action ID="GoalCheckerSelector">
+            <input_port name="default_goal_checker">Default goal checker of the controller selector</input_port>
+            <output_port name="selected_goal_checker">Name of the selected goal checker received from the topic subcription</output_port>
+            <input_port name="topic_name">Name of the topic to receive goal checker selection commands</input_port>
+        </Action>
+        <Condition ID="GoalReached">
+            <input_port name="goal">Destination</input_port>
+        </Condition>
+        <Condition ID="GoalUpdated"/>
+        <Decorator ID="GoalUpdatedController"/>
+        <Decorator ID="GoalUpdater">
+            <input_port name="input_goal">Original goal in</input_port>
+            <output_port name="output_goal">Output goal set by subscription</output_port>
+        </Decorator>
+        <Condition ID="InitialPoseReceived"/>
+        <Condition ID="IntersectionFree"/>
+        <Condition ID="IsBatteryLow">
+            <input_port name="battery_topic">Topic for battery info</input_port>
+            <input_port name="is_voltage">Bool if check based on voltage or total %</input_port>
+            <input_port name="min_battery">Min battery % or voltage before triggering</input_port>
+        </Condition>
+        <Condition ID="IsStuck"/>
+        <Action ID="NavigateThroughPoses">
+            <input_port name="goals">Goals</input_port>
+        </Action>
+        <Action ID="NavigateToPose">
+            <input_port name="goal">Goal</input_port>
+        </Action>
+        <Control ID="PipelineSequence"/>
+        <Action ID="PlannerSelector">
+            <input_port name="default_planner">Default planner of the planner selector</input_port>
+            <output_port name="selected_planner">Name of the selected planner received from the topic subcription</output_port>
+            <input_port name="topic_name">Name of the topic to receive planner selection commands</input_port>
+        </Action>
+        <Decorator ID="RateController">
+            <input_port name="hz" type="double">Rate</input_port>
+        </Decorator>
+        <Control ID="RecoveryNode">
+            <input_port name="number_of_retries" type="int">Number of retries</input_port>
+        </Control>
+        <Action ID="ReinitializeGlobalLocalization"/>
+        <Action ID="RemovePassedGoals">
+            <input_port name="input_goals">Input goals to remove if passed</input_port>
+            <output_port name="output_goals">Set of goals after removing any passed</output_port>
+            <input_port name="radius">Radius tolerance on a goal to consider it passed</input_port>
+        </Action>
+        <Control ID="RoundRobin"/>
+        <Decorator ID="SingleTrigger"/>
+        <Decorator ID="SpeedController">
+            <input_port name="filter_duration">Duration (secs) for velocity smoothing filter</input_port>
+            <input_port name="max_rate">Maximum rate</input_port>
+            <input_port name="max_speed">Maximum speed</input_port>
+            <input_port name="min_rate">Minimum rate</input_port>
+            <input_port name="min_speed">Minimum speed</input_port>
+        </Decorator>
+        <Action ID="Spin">
+            <input_port name="spin_dist">Spin distance</input_port>
+        </Action>
+        <Condition ID="TimeExpired">
+            <input_port name="seconds">Time to check if expired</input_port>
+        </Condition>
+        <Condition ID="TransformAvailable">
+            <input_port name="child">Child frame for transform</input_port>
+            <input_port name="parent">Parent frame for transform</input_port>
+        </Condition>
+        <Action ID="TruncatePath">
+            <input_port name="distance">Distance before goal to truncate</input_port>
+            <input_port name="input_path">Path to truncate</input_port>
+            <output_port name="output_path">Truncated path to utilize</output_port>
+        </Action>
+        <Action ID="Wait">
+            <input_port name="wait_duration">Wait time</input_port>
+        </Action>
+    </TreeNodesModel>
+    <!-- ////////// -->
+</root>

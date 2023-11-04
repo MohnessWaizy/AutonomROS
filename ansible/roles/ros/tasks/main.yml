@@ -1,0 +1,57 @@
+---
+- name: Add ROS apt key
+  become: true
+  ansible.builtin.get_url:
+    url: https://raw.githubusercontent.com/ros/rosdistro/master/ros.key
+    dest: /usr/share/keyrings/ros-archive-keyring.gpg
+
+- name: Get architecture
+  ansible.builtin.command: dpkg --print-architecture
+  register: architecture
+  changed_when: false
+
+- name: Add ROS repository
+  become: true
+  ansible.builtin.apt_repository:
+    filename: ros2
+    repo: "deb [arch={{ architecture.stdout }} signed-by=/usr/share/keyrings/ros-archive-keyring.gpg] http://packages.ros.org/ros2/ubuntu {{ ansible_distribution_release }} main"
+
+- name: Install ROS 2 packages
+  become: true
+  ansible.builtin.apt:
+    name:
+      - python3-pip
+      - ros-galactic-desktop
+      - ros-galactic-turtlesim # tutorial
+      - ros-galactic-rqt*
+      - python3-colcon-common-extensions
+      - python3-rosdep
+    state: present
+  when: board is not defined or not board
+
+- name: Install ROS 2 board packages
+  become: true
+  ansible.builtin.apt:
+    name:
+      - python3-pip
+      - ros-galactic-ros-base
+      - python3-rosdep
+      - ros-galactic-osrf-testing-tools-cpp # needed by ReconROS
+      - ros-galactic-rcl-logging-log4cxx # needed by ReconROS
+      - ros-galactic-rmw-fastrtps-cpp # needed for ReconROS
+      - ros-galactic-rmw-cyclonedds-cpp # needed for common nodes
+    state: present
+  when: board is defined and board
+
+- name: Init rosdep
+  become: true
+  ansible.builtin.command: rosdep init
+  args:
+    creates: /etc/ros/rosdep/sources.list.d/20-default.list
+
+- name: Install ROS Cross Compile Tool
+  become: true
+  ansible.builtin.pip:
+    name:
+      - ros_cross_compile==0.9.0
+  when: board is not defined or not board

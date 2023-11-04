@@ -1,0 +1,24 @@
+---
+- name: Add Gazebo apt key
+  become: true
+  ansible.builtin.apt_key:
+    url: https://packages.osrfoundation.org/gazebo.key
+    keyring: /usr/share/keyrings/gazebo-archive-keyring.gpg
+
+- name: Get architecture
+  ansible.builtin.command: dpkg --print-architecture
+  register: architecture
+  changed_when: False
+
+- name: Add Gazebo repository
+  become: true
+  ansible.builtin.apt_repository:
+    filename: gazebo
+    repo: "deb [arch={{ architecture.stdout }} signed-by=/usr/share/keyrings/gazebo-archive-keyring.gpg] http://packages.osrfoundation.org/gazebo/ubuntu-stable {{ ansible_distribution_release }} main"
+
+- name: Install Gazebo packages
+  become: true
+  ansible.builtin.apt:
+    name:
+      - ros-galactic-gazebo-ros-pkgs
+    state: present

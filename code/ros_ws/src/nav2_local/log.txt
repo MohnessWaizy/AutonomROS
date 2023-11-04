@@ -1,0 +1,130 @@
+[INFO] [launch]: All log files can be found below /home/waizy/.ros/log/2022-08-30-10-19-50-372149-ceg-247-pc-126588
+[INFO] [launch]: Default logging verbosity is set to INFO
+[INFO] [controller_server-1]: process started with pid [126591]
+[INFO] [planner_server-2]: process started with pid [126593]
+[INFO] [recoveries_server-3]: process started with pid [126595]
+[INFO] [bt_navigator-4]: process started with pid [126597]
+[INFO] [waypoint_follower-5]: process started with pid [126628]
+[INFO] [lifecycle_manager-6]: process started with pid [126630]
+[controller_server-1] [INFO] [1661847590.947598559] [controller_server]: 
+[controller_server-1] 	controller_server lifecycle node launched. 
+[controller_server-1] 	Waiting on external lifecycle transitions to activate
+[controller_server-1] 	See https://design.ros2.org/articles/node_lifecycle.html for more information.
+[controller_server-1] [INFO] [1661847590.951335632] [controller_server]: Creating controller server
+[controller_server-1] [INFO] [1661847590.966606127] [local_costmap.local_costmap]: 
+[controller_server-1] 	local_costmap lifecycle node launched. 
+[controller_server-1] 	Waiting on external lifecycle transitions to activate
+[controller_server-1] 	See https://design.ros2.org/articles/node_lifecycle.html for more information.
+[controller_server-1] [INFO] [1661847590.967066225] [local_costmap.local_costmap]: Creating Costmap
+[planner_server-2] [INFO] [1661847590.974598533] [planner_server]: 
+[planner_server-2] 	planner_server lifecycle node launched. 
+[planner_server-2] 	Waiting on external lifecycle transitions to activate
+[planner_server-2] 	See https://design.ros2.org/articles/node_lifecycle.html for more information.
+[planner_server-2] [INFO] [1661847590.977602877] [planner_server]: Creating
+[recoveries_server-3] [INFO] [1661847590.949908779] [recoveries_server]: 
+[recoveries_server-3] 	recoveries_server lifecycle node launched. 
+[recoveries_server-3] 	Waiting on external lifecycle transitions to activate
+[recoveries_server-3] 	See https://design.ros2.org/articles/node_lifecycle.html for more information.
+[bt_navigator-4] [INFO] [1661847590.982492371] [bt_navigator]: 
+[bt_navigator-4] 	bt_navigator lifecycle node launched. 
+[bt_navigator-4] 	Waiting on external lifecycle transitions to activate
+[bt_navigator-4] 	See https://design.ros2.org/articles/node_lifecycle.html for more information.
+[bt_navigator-4] [INFO] [1661847590.982579426] [bt_navigator]: Creating
+[planner_server-2] [INFO] [1661847590.993656136] [global_costmap.global_costmap]: 
+[planner_server-2] 	global_costmap lifecycle node launched. 
+[planner_server-2] 	Waiting on external lifecycle transitions to activate
+[planner_server-2] 	See https://design.ros2.org/articles/node_lifecycle.html for more information.
+[planner_server-2] [INFO] [1661847590.994019598] [global_costmap.global_costmap]: Creating Costmap
+[waypoint_follower-5] [INFO] [1661847590.995436198] [waypoint_follower]: 
+[waypoint_follower-5] 	waypoint_follower lifecycle node launched. 
+[waypoint_follower-5] 	Waiting on external lifecycle transitions to activate
+[waypoint_follower-5] 	See https://design.ros2.org/articles/node_lifecycle.html for more information.
+[waypoint_follower-5] [INFO] [1661847590.996955049] [waypoint_follower]: Creating
+[lifecycle_manager-6] [INFO] [1661847591.002908840] [lifecycle_manager_navigation]: Creating
+[lifecycle_manager-6] [INFO] [1661847591.004974389] [lifecycle_manager_navigation]: [34m[1mCreating and initializing lifecycle service clients[0m[0m
+[lifecycle_manager-6] [INFO] [1661847591.013659563] [lifecycle_manager_navigation]: [34m[1mStarting managed nodes bringup...[0m[0m
+[lifecycle_manager-6] [INFO] [1661847591.013702850] [lifecycle_manager_navigation]: [34m[1mConfiguring controller_server[0m[0m
+[controller_server-1] [INFO] [1661847591.018210268] [controller_server]: Configuring controller interface
+[controller_server-1] [INFO] [1661847591.018390843] [controller_server]: getting goal checker plugins..
+[controller_server-1] [INFO] [1661847591.018453043] [controller_server]: Controller frequency set to 20.0000Hz
+[controller_server-1] [INFO] [1661847591.018470741] [local_costmap.local_costmap]: Configuring
+[controller_server-1] [INFO] [1661847591.020687059] [local_costmap.local_costmap]: Using plugin "voxel_layer"
+[controller_server-1] [INFO] [1661847591.026063562] [local_costmap.local_costmap]: Subscribed to Topics: scan
+[controller_server-1] [INFO] [1661847591.032136578] [local_costmap.local_costmap]: Initialized plugin "voxel_layer"
+[controller_server-1] [INFO] [1661847591.032170654] [local_costmap.local_costmap]: Using plugin "inflation_layer"
+[controller_server-1] [INFO] [1661847591.033679101] [local_costmap.local_costmap]: Initialized plugin "inflation_layer"
+[controller_server-1] [INFO] [1661847591.038772447] [controller_server]: Created progress_checker : progress_checker of type nav2_controller::SimpleProgressChecker
+[controller_server-1] [INFO] [1661847591.044165145] [controller_server]: Created goal checker : general_goal_checker of type nav2_controller::SimpleGoalChecker
+[controller_server-1] [INFO] [1661847591.047991358] [controller_server]: Controller Server has general_goal_checker  goal checkers available.
+[controller_server-1] [INFO] [1661847591.049987630] [controller_server]: Created controller : FollowPath of type dwb_core::DWBLocalPlanner
+[controller_server-1] [INFO] [1661847591.054322155] [controller_server]: Setting transform_tolerance to 0.200000
+[controller_server-1] [INFO] [1661847591.066119124] [controller_server]: Using critic "RotateToGoal" (dwb_critics::RotateToGoalCritic)
+[controller_server-1] [INFO] [1661847591.067105536] [controller_server]: Critic plugin initialized
+[controller_server-1] [INFO] [1661847591.067329900] [controller_server]: Using critic "Oscillation" (dwb_critics::OscillationCritic)
+[controller_server-1] [INFO] [1661847591.068161887] [controller_server]: Critic plugin initialized
+[controller_server-1] [INFO] [1661847591.068360098] [controller_server]: Using critic "BaseObstacle" (dwb_critics::BaseObstacleCritic)
+[controller_server-1] [INFO] [1661847591.068657166] [controller_server]: Critic plugin initialized
+[controller_server-1] [INFO] [1661847591.068789618] [controller_server]: Using critic "GoalAlign" (dwb_critics::GoalAlignCritic)
+[controller_server-1] [INFO] [1661847591.070674163] [controller_server]: Critic plugin initialized
+[controller_server-1] [INFO] [1661847591.070777761] [controller_server]: Using critic "PathAlign" (dwb_critics::PathAlignCritic)
+[controller_server-1] [INFO] [1661847591.070944256] [controller_server]: Critic plugin initialized
+[controller_server-1] [INFO] [1661847591.071453458] [controller_server]: Using critic "PathDist" (dwb_critics::PathDistCritic)
+[controller_server-1] [INFO] [1661847591.071628115] [controller_server]: Critic plugin initialized
+[controller_server-1] [INFO] [1661847591.071698637] [controller_server]: Using critic "GoalDist" (dwb_critics::GoalDistCritic)
+[controller_server-1] [INFO] [1661847591.071822198] [controller_server]: Critic plugin initialized
+[controller_server-1] [INFO] [1661847591.071837342] [controller_server]: Controller Server has FollowPath  controllers available.
+[lifecycle_manager-6] [INFO] [1661847591.076030540] [lifecycle_manager_navigation]: [34m[1mConfiguring planner_server[0m[0m
+[planner_server-2] [INFO] [1661847591.076207995] [planner_server]: Configuring
+[planner_server-2] [INFO] [1661847591.076234959] [global_costmap.global_costmap]: Configuring
+[planner_server-2] [INFO] [1661847591.078489782] [global_costmap.global_costmap]: Using plugin "static_layer"
+[planner_server-2] [INFO] [1661847591.083104051] [global_costmap.global_costmap]: Subscribing to the map topic (/map) with transient local durability
+[planner_server-2] [INFO] [1661847591.083966240] [global_costmap.global_costmap]: Initialized plugin "static_layer"
+[planner_server-2] [INFO] [1661847591.084000292] [global_costmap.global_costmap]: Using plugin "obstacle_layer"
+[planner_server-2] [INFO] [1661847591.085585225] [global_costmap.global_costmap]: Subscribed to Topics: scan
+[planner_server-2] [INFO] [1661847591.089095512] [global_costmap.global_costmap]: Initialized plugin "obstacle_layer"
+[planner_server-2] [INFO] [1661847591.089127021] [global_costmap.global_costmap]: Using plugin "inflation_layer"
+[planner_server-2] [INFO] [1661847591.091672149] [global_costmap.global_costmap]: Initialized plugin "inflation_layer"
+[planner_server-2] [INFO] [1661847591.096709503] [planner_server]: Created global planner plugin GridBased of type nav2_navfn_planner/NavfnPlanner
+[planner_server-2] [INFO] [1661847591.096749357] [planner_server]: Configuring plugin GridBased of type NavfnPlanner
+[planner_server-2] [INFO] [1661847591.100107034] [planner_server]: Planner Server has GridBased  planners available.
+[lifecycle_manager-6] [INFO] [1661847591.106537378] [lifecycle_manager_navigation]: [34m[1mConfiguring recoveries_server[0m[0m
+[recoveries_server-3] [INFO] [1661847591.106723310] [recoveries_server]: Configuring
+[recoveries_server-3] [INFO] [1661847591.109636159] [recoveries_server]: Creating recovery plugin spin of type nav2_recoveries/Spin
+[recoveries_server-3] [INFO] [1661847591.111355865] [recoveries_server]: Configuring spin
+[recoveries_server-3] [INFO] [1661847591.116693114] [recoveries_server]: Creating recovery plugin backup of type nav2_recoveries/BackUp
+[recoveries_server-3] [INFO] [1661847591.117643850] [recoveries_server]: Configuring backup
+[recoveries_server-3] [INFO] [1661847591.119609801] [recoveries_server]: Creating recovery plugin wait of type nav2_recoveries/Wait
+[recoveries_server-3] [INFO] [1661847591.120391930] [recoveries_server]: Configuring wait
+[lifecycle_manager-6] [INFO] [1661847591.123595518] [lifecycle_manager_navigation]: [34m[1mConfiguring bt_navigator[0m[0m
+[bt_navigator-4] [INFO] [1661847591.123767090] [bt_navigator]: Configuring
+[bt_navigator-4] [ERROR] [1661847591.143816122] []: Caught exception in callback for transition 10
+[bt_navigator-4] [ERROR] [1661847591.143838150] []: Original error: Could not load library: libnav2_goal_updated_controller_bt_node.so: cannot open shared object file: No such file or directory
+[bt_navigator-4] [WARN] [1661847591.143864007] []: Error occurred while doing error handling.
+[bt_navigator-4] [FATAL] [1661847591.143873191] [bt_navigator]: Lifecycle node bt_navigator does not have error state implemented
+[lifecycle_manager-6] [ERROR] [1661847591.144269011] [lifecycle_manager_navigation]: Failed to change state for node: bt_navigator
+[lifecycle_manager-6] [ERROR] [1661847591.144295682] [lifecycle_manager_navigation]: Failed to bring up all requested nodes. Aborting bringup.
+[WARNING] [launch]: user interrupted with ctrl-c (SIGINT)
+[recoveries_server-3] [INFO] [1661847596.680588902] [rclcpp]: signal_handler(signal_value=2)
+[INFO] [lifecycle_manager-6]: process has finished cleanly [pid 126630]
+[lifecycle_manager-6] [INFO] [1661847596.680595955] [rclcpp]: signal_handler(signal_value=2)
+[bt_navigator-4] [INFO] [1661847596.680600941] [rclcpp]: signal_handler(signal_value=2)
+[waypoint_follower-5] [INFO] [1661847596.680632706] [rclcpp]: signal_handler(signal_value=2)
+[controller_server-1] [INFO] [1661847596.680717329] [rclcpp]: signal_handler(signal_value=2)
+[planner_server-2] [INFO] [1661847596.680719537] [rclcpp]: signal_handler(signal_value=2)
+[waypoint_follower-5] [INFO] [1661847596.695191181] [waypoint_follower]: Destroying
+[planner_server-2] [INFO] [1661847596.748246338] [planner_server]: Destroying plugin GridBased of type NavfnPlanner
+[bt_navigator-4] [INFO] [1661847596.748334585] [bt_navigator]: Destroying
+[recoveries_server-3] [INFO] [1661847596.768682232] [recoveries_server]: Destroying
+[planner_server-2] Warning: class_loader.ClassLoader: SEVERE WARNING!!! Attempting to unload library while objects created by this loader exist in the heap! You should delete your objects before attempting to unload the library or destroying the ClassLoader. The library will NOT be unloaded.
+[planner_server-2]          at line 127 in /tmp/binarydeb/ros-galactic-class-loader-2.1.2/src/class_loader.cpp
+[controller_server-1] Warning: class_loader.ClassLoader: SEVERE WARNING!!! Attempting to unload library while objects created by this loader exist in the heap! You should delete your objects before attempting to unload the library or destroying the ClassLoader. The library will NOT be unloaded.
+[controller_server-1]          at line 127 in /tmp/binarydeb/ros-galactic-class-loader-2.1.2/src/class_loader.cpp
+[controller_server-1] [INFO] [1661847596.794121497] [local_costmap.local_costmap]: Destroying
+[planner_server-2] [INFO] [1661847596.797441644] [global_costmap.global_costmap]: Destroying
+[controller_server-1] [INFO] [1661847596.827635402] [controller_server]: Destroying
+[planner_server-2] [INFO] [1661847596.835686611] [planner_server]: Destroying
+[INFO] [waypoint_follower-5]: process has finished cleanly [pid 126628]
+[INFO] [bt_navigator-4]: process has finished cleanly [pid 126597]
+[INFO] [recoveries_server-3]: process has finished cleanly [pid 126595]
+[INFO] [controller_server-1]: process has finished cleanly [pid 126591]
+[INFO] [planner_server-2]: process has finished cleanly [pid 126593]

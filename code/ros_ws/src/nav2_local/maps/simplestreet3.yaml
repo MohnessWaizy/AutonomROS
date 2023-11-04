@@ -1,0 +1,24 @@
+# image: nascarcircle.png
+# resolution: 0.00925883
+# # resolution: 0.00633803
+# origin: [-11.930000, -4.50000,  0.000000]
+# # origin: [-4.50000, -4.50000, 0.000000] #yaw component always 0
+# negate: 0 #= false, if true: blacker pixels=free
+# occupied_thresh: 0.65 #percentage of max lightness/darkness level (255)
+# free_thresh: 0.196 #percentage of max lightness/darkness level (255)
+# #mode: trinary (default, black= occupied, white=free) # else scale(black= occupied, white=free) or raw(white= occupied, black=free)
+
+
+
+image: final_map.png
+#resolution: 0.01033058 # for IntersectionRoad
+#resolution: 0.009307135 # for white
+#resolution: 0.00633803
+resolution: 0.00517063 # for final_map
+origin: [-5, -5,  0.000000] # for IntersectionRoad
+# origin: [-11.930000, -4.50000,  0.000000] # for white
+#origin: [-4.50000, -4.50000, 0.000000] #yaw component always 0
+negate: 0 #= false, if true: blacker pixels=free
+occupied_thresh: 0.60 #percentage of max lightness/darkness level (255)
+free_thresh: 0.196 #percentage of max lightness/darkness level (255)
+mode: scale #(trinary = default, black= occupied, white=free) # else scale(black= occupied, white=free) or raw(white= occupied, black=free)

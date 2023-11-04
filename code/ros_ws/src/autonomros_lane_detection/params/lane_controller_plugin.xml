@@ -1,0 +1,7 @@
+<library path="autonomros_lane_detection_core">
+    <class type="autonomros_lane_detection::LaneController" base_class_type="nav2_core::Controller">
+        <description>
+        This is lane controller
+        </description>
+    </class>
+</library>

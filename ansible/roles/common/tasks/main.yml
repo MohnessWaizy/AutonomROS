@@ -1,0 +1,34 @@
+---
+- name: Install latest updates
+  become: true
+  ansible.builtin.apt:
+    update_cache: yes
+    upgrade: yes
+    cache_valid_time: 43200 # 12h
+  tags:
+    - updates
+
+- name: Install common software
+  become: true
+  ansible.builtin.apt:
+    name:
+      - python3-psutil
+    state: present
+
+- name: Create ansible folder
+  ansible.builtin.file:
+    owner: "{{ main_user_name }}"
+    group: "{{ main_user_name }}"
+    mode: "0755"
+    path: /home/{{ main_user_name }}/ansible-files
+    state: directory
+
+
+# - name: Disable multicast
+#   become: true
+#   ansible.builtin.template:
+#     src: multicast.j2
+#     dest: /etc/cron.d/multicast
+#     mode: "0644"
+#     owner: root
+#     group: root

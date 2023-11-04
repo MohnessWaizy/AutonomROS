@@ -1,0 +1,27 @@
+---
+- hosts: local
+  roles:
+    - role: common
+      tags:
+        - common
+    - role: ros
+      tags:
+        - ros
+    - role: docker
+      tags:
+        - docker
+    - role: board
+      tags:
+        - board
+    - role: gazebo
+      tags:
+        - gazebo
+    - role: vivado
+      tags:
+        - vivado
+    - role: reconros
+      tags:
+        - reconros
+    - role: astrasdk
+      tags:
+        - astrasdk

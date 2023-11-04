@@ -1,0 +1,21 @@
+- name: Install common software
+  become: true
+  ansible.builtin.apt:
+    name:
+      - unzip
+    state: present
+
+- name: Create ansible folder
+  ansible.builtin.file:
+    owner: "{{ main_user_name }}"
+    group: "{{ main_user_name }}"
+    mode: "0755"
+    path: /home/{{ main_user_name }}/ansible-files
+    state: directory
+
+- name: Add user to dialout and video
+  become: true
+  ansible.builtin.user:
+    name: "{{ main_user_name }}"
+    groups: dialout,video
+    append: yes

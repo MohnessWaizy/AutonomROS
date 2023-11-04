@@ -1,0 +1,5 @@
+<library path="autonomros_lane_detection_core">
+  <class name="nav2_behaviors/V2INode" type="nav2_behaviors::V2INode" base_class_type="nav2_core::Behavior">
+    <description>This is an example plugin which produces an SMS text message behavior.</description>
+  </class>
+</library>

@@ -1,0 +1,41 @@
+---
+- name: Install dependencies
+  become: true
+  ansible.builtin.apt:
+    name:
+      - faketime
+      - libtinfo5
+    state: present
+
+- name: Create install directory
+  become: true
+  ansible.builtin.file:
+    owner: "{{ main_user_name }}"
+    group: "{{ main_user_name }}"
+    mode: "0755"
+    path: /opt/Xilinx
+    state: directory
+
+- name: Add vivado config
+  ansible.builtin.copy:
+    src: install_config.txt
+    dest: /home/{{ main_user_name }}/ansible-files/install_config.txt
+    mode: "0644"
+    owner: "{{ main_user_name }}"
+    group: "{{ main_user_name }}"
+
+- name: Check vivado installed
+  ansible.builtin.stat:
+    path: /opt/Xilinx/Vivado/2021.2
+    get_attributes: false
+    get_checksum: false
+    get_mime: false
+  register: vivado_available
+
+- name: Install cable drivers
+  become: true
+  ansible.builtin.command: ./install_drivers
+  args:
+    chdir: /opt/Xilinx/Vivado/2021.2/data/xicom/cable_drivers/lin64/install_script/install_drivers
+    creates: /etc/udev/rules.d/52-xilinx-digilent-usb.rules
+  when: vivado_available.stat.exists

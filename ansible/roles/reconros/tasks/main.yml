@@ -1,0 +1,54 @@
+---
+- name: Install dependencies
+  become: true
+  ansible.builtin.apt:
+    name:
+      - python3-colcon-common-extensions
+      - g++-multilib
+      - qemu
+      - qemu-user-static
+      - qemu-user
+      - binfmt-support
+      - python3-docker
+    state: present
+
+- name: Create ReconROS Docker directory
+  ansible.builtin.file:
+    owner: "{{ main_user_name }}"
+    group: "{{ main_user_name }}"
+    mode: "0755"
+    path: /home/{{ main_user_name }}/ansible-files/ReconROS-Docker
+    state: directory
+
+- name: Add Dockerfile
+  ansible.builtin.copy:
+    src: Dockerfile
+    dest: /home/{{ main_user_name }}/ansible-files/ReconROS-Docker/Dockerfile
+    owner: "{{ main_user_name }}"
+    group: "{{ main_user_name }}"
+    mode: "0644"
+
+- name: Add dockerignore
+  ansible.builtin.copy:
+    src: .dockerignore
+    dest: /home/{{ main_user_name }}/ansible-files/ReconROS-Docker/.dockerignore
+    owner: "{{ main_user_name }}"
+    group: "{{ main_user_name }}"
+    mode: "0644"
+
+- name: Add qemu-user-static
+  ansible.builtin.copy:
+    remote_src: true
+    src: /usr/bin/qemu-aarch64-static
+    dest: /home/{{ main_user_name }}/ansible-files/ReconROS-Docker/qemu-aarch64-static
+    owner: "{{ main_user_name }}"
+    group: "{{ main_user_name }}"
+    mode: "0644"
+
+- name: Build docker image
+  community.docker.docker_image:
+    build:
+      path: /home/{{ main_user_name }}/ansible-files/ReconROS-Docker/
+      pull: true
+    name: reconros_arm64_galactic:2.0
+    source: build

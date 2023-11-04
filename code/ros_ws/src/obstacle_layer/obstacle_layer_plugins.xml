@@ -1,0 +1,5 @@
+<library path="obstacle_layer_core">
+  <class name="autonomros_obstacle_costmap_plugin::ObstacleLayer" type="autonomros_obstacle_costmap_plugin::ObstacleLayer" base_class_type="nav2_costmap_2d::Layer">
+    <description>This is an obstacle layer that gets the obstacle information directly from a HW Thread via iceoryx</description>
+  </class>
+</library>

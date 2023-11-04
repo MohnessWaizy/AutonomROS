@@ -1,0 +1,6 @@
+astra_pro_publisher:
+  ros__parameters:
+    frame_id: "depth_camera_link"
+    image_width: 640
+    image_height: 480
+    pointcloud: false

@@ -1,0 +1,39 @@
+- name: AMD64 Download SDK
+  ansible.builtin.get_url:
+    url: https://dl.orbbec3d.com/dist/astra/v2.1.3/AstraSDK-v2.1.3-Ubuntu-x86_64.zip
+    dest: /home/{{ main_user_name }}/ansible-files/AstraSDK.zip
+    owner: "{{ main_user_name }}"
+    group: "{{ main_user_name }}"
+    mode: "0644"
+    checksum: "sha512:e91d635c52fe5c2cad43c4d6a264e574e78495e37a0109a3a97d2e56e764c4887f71590752fac6b190c0ad777ef650fad5710d05f69e86740fd5e8e6a57b9104"
+
+- name: AMD64 Unarchive SDK
+  ansible.builtin.unarchive:
+    remote_src: true
+    src: /home/{{ main_user_name }}/ansible-files/AstraSDK.zip
+    dest: /home/{{ main_user_name }}/ansible-files/
+    include:
+      - AstraSDK-v2.1.3-94bca0f52e-20210608T062039Z-Ubuntu18.04-x86_64.tar.gz
+    owner: "{{ main_user_name }}"
+    group: "{{ main_user_name }}"
+
+- name: AMD64 Unarchive Ubuntu version
+  ansible.builtin.unarchive:
+    remote_src: true
+    src: /home/{{ main_user_name }}/ansible-files/AstraSDK-v2.1.3-94bca0f52e-20210608T062039Z-Ubuntu18.04-x86_64.tar.gz
+    dest: /home/{{ main_user_name }}/ansible-files/
+    owner: "{{ main_user_name }}"
+    group: "{{ main_user_name }}"
+
+- name: AMD64 Copy to install directory
+  become: true
+  ansible.builtin.copy:
+    remote_src: true
+    src: /home/{{ main_user_name }}/ansible-files/AstraSDK-v2.1.3-94bca0f52e-20210608T062039Z-Ubuntu18.04-x86_64/{{ item }}/
+    dest: /opt/AstraSDK/{{ item }}/
+    mode: "0755"
+    owner: root
+    group: root
+  loop:
+    - include
+    - lib

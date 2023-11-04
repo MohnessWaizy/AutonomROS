@@ -1,0 +1,2 @@
+# Disable multicast
+@reboot root /usr/sbin/ip link set {{ ansible_default_ipv4.interface }} multicast off

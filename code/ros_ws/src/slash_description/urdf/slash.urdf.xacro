@@ -1,0 +1,427 @@
+<?xml version="1.0"?>
+<robot xmlns:xacro="https://www.ros.org/wiki/xacro" name="slash">
+  <!-- helper -->
+  <xacro:macro name="visual_collision" params="**content">
+    <visual>
+      <xacro:insert_block name="content" />
+    </visual>
+    <collision>
+      <xacro:insert_block name="content" />
+    </collision>
+  </xacro:macro>
+
+  <!-- common properties -->
+  <xacro:property name="robotname" value="slash" />
+  <xacro:property name="width" value="0.296" />
+  <xacro:property name="length" value="0.525" />
+  <xacro:property name="weight" value="2.16" />
+
+  <!-- chassis properties -->
+  <xacro:property name="chassis_ground_clearance" value="0.089" />
+  <xacro:property name="chassis_length" value="0.265" />
+  <xacro:property name="chassis_width" value="0.185" />
+  <xacro:property name="chassis_height" value="0.01" />
+  <xacro:property name="chassis_weight" value="${weight - 4 * wheel_weight}" />
+
+  <!-- axle properties -->
+  <xacro:property name="axle_radius" value="0.01" />
+
+  <!-- wheel properties -->
+  <xacro:property name="wheel_wheelbase" value="0.325" />
+  <xacro:property name="wheel_radius" value=".054" />
+  <xacro:property name="wheel_width" value=".045" />
+  <xacro:property name="wheel_weight" value="0.2" />
+
+  <!-- camera properties -->
+  <xacro:property name="camera_pos" value="0.155 0 0.127" />
+  <xacro:property name="camera_height" value="0.04" />
+  <xacro:property name="camera_width" value="0.04" />
+  <xacro:property name="camera_length" value="0.025" />
+  <xacro:property name="camera_weight" value="0.07" />
+
+  <!-- 3D camera properties -->
+  <xacro:property name="depth_camera_pos" value="${-chassis_width+0.03} 0 ${chassis_ground_clearance + 0.175}" />
+  
+  <!-- ultrasound sensor properties -->
+  <xacro:property name="ultrasound_pos" value="0.155 -0.08 0.127" />
+  <xacro:property name="ultrasound_height" value="0.02" />
+  <xacro:property name="ultrasound_width" value="0.04" />
+  <xacro:property name="ultrasound_length" value="0.015" />
+  <xacro:property name="ultrasound_weight" value="0.07" />
+
+  <!-- IMU -->
+  <xacro:property name="imu_pos" value="-0.09 -0.01 0.135" />
+
+  <!-- WheelEncoder -->
+  <xacro:property name="wheel_encoder_pos" value="${-wheel_wheelbase / 2} ${-(width - wheel_width) / 2} ${wheel_radius}" />
+
+  <!-- wheel -->
+  <xacro:macro name="wheel" params="pos_name pos_x pos_y steering">
+    <link name="wheel_${pos_name}">
+      <inertial>
+        <mass value="${wheel_weight}"/>
+        <inertia
+          ixx="${(wheel_weight / 12) * (3 * wheel_radius ** 2 + wheel_width ** 2)}" ixy="0.0" ixz="0.0"
+          iyy="${(wheel_weight / 12) * (3 * wheel_radius ** 2 + wheel_width ** 2)}" iyz="0.0"
+          izz="${(wheel_weight / 12) * (6 * wheel_radius ** 2)}" />
+      </inertial>
+      <xacro:visual_collision>
+        <content>
+          <geometry>
+            <cylinder length="${wheel_width}" radius="${wheel_radius}" />
+          </geometry>
+        </content>
+      </xacro:visual_collision>
+    </link>
+    <xacro:if value="${steering}">
+      <link name="wheel_${pos_name}_steering_axle">
+        <inertial>
+          <mass value="0.001" />
+          <inertia
+            ixx="${(wheel_weight / 12) * (3 * wheel_radius ** 2 + wheel_width ** 2)}" ixy="0.0" ixz="0.0"
+            iyy="${(wheel_weight / 12) * (3 * wheel_radius ** 2 + wheel_width ** 2)}" iyz="0.0"
+            izz="${(wheel_weight / 12) * (6 * wheel_radius ** 2)}" />
+        </inertial>
+      </link>
+      <joint name="wheel_${pos_name}_steering_joint" type="revolute">
+        <origin xyz="${pos_x} ${pos_y} ${wheel_radius}" rpy="1.5707 0 0" />
+        <parent link="base_link" />
+        <child link="wheel_${pos_name}_steering_axle" />
+        <axis xyz="0 1 0" />
+        <limit lower="-0.785398163" upper="0.785398163" effort="30" velocity="1.0" />
+      </joint>
+    </xacro:if>
+    <joint name="wheel_${pos_name}_chassis_joint" type="continuous">
+      <xacro:if value="${not steering}">
+        <origin xyz="${pos_x} ${pos_y} ${wheel_radius}" rpy="1.5707 0 0" />
+      </xacro:if>
+      <xacro:if value="${steering}">
+        <origin xyz="0 0 0" rpy="0 0 0" />
+      </xacro:if>
+      <xacro:if value="${not steering}">
+        <parent link="base_link" />
+      </xacro:if>
+      <xacro:if value="${steering}">
+        <parent link="wheel_${pos_name}_steering_axle" />
+      </xacro:if>
+      <child link="wheel_${pos_name}" />
+      <axis xyz="0 0 -1" />
+    </joint>
+  </xacro:macro>
+
+  <!-- chassis -->
+  <link name="base_link">
+    <inertial>
+      <origin xyz="0 0 ${chassis_ground_clearance}" rpy="0 0 0" />
+      <mass value="${chassis_weight}" />
+      <inertia
+        ixx="${(chassis_weight / 12) * (chassis_width ** 2 + chassis_height ** 2)}" ixy="0.0" ixz="0.0"
+        iyy="${(chassis_weight / 12) * (chassis_length ** 2 + chassis_height ** 2)}" iyz="0.0"
+        izz="${(chassis_weight / 12) * (chassis_length ** 2 + chassis_width ** 2)}" />
+    </inertial>
+    <xacro:visual_collision> <!-- main plate -->
+      <content>
+        <origin xyz="0 0 ${chassis_ground_clearance}" />
+        <geometry>
+          <box size="${chassis_length} ${chassis_width} ${chassis_height}"/>
+        </geometry>
+      </content>
+    </xacro:visual_collision>
+    <xacro:visual_collision> <!-- rear axle -->
+      <content>
+        <origin xyz="${-wheel_wheelbase / 2} 0 ${wheel_radius}" rpy="1.5707 0 0" />
+        <geometry>
+          <cylinder length="${width - 2 * wheel_width}" radius="${axle_radius}" />
+        </geometry>
+      </content>
+    </xacro:visual_collision>
+    <xacro:visual_collision> <!-- front axle -->
+      <content>
+        <origin xyz="${wheel_wheelbase / 2} 0 ${wheel_radius}" rpy="1.5707 0 0" />
+        <geometry>
+          <cylinder length="${width - 2 * wheel_width}" radius="${axle_radius}" />
+        </geometry>
+      </content>
+    </xacro:visual_collision>
+  </link>
+
+  <!-- ultrasound sensor -->
+  <link name="ultrasound_link">
+    <inertial>
+      <origin xyz="0 0 0" rpy="0 0 0" />
+      <mass value="${ultrasound_weight}" />
+      <inertia
+        ixx="${(ultrasound_weight / 12) * (ultrasound_width ** 2 + ultrasound_height ** 2)}" ixy="0.0" ixz="0.0"
+        iyy="${(ultrasound_weight / 12) * (ultrasound_length ** 2 + ultrasound_height ** 2)}" iyz="0.0"
+        izz="${(ultrasound_weight / 12) * (ultrasound_length ** 2 + ultrasound_width ** 2)}" />
+    </inertial>
+    <xacro:visual_collision>
+      <content>
+        <origin xyz="0 0 0" rpy="0 0 0" />
+        <geometry>
+          <box size="${ultrasound_length} ${ultrasound_width} ${ultrasound_height}" />
+        </geometry>
+      </content>
+    </xacro:visual_collision>
+  </link>
+
+  <joint name="ultrasound_joint" type="fixed">
+    <origin xyz="${ultrasound_pos}" rpy="0 0 0" />
+    <parent link="base_link" />
+    <child link="ultrasound_link" />
+  </joint>
+  
+  <gazebo reference="ultrasound_link">
+    <sensor type="ray" name="ultrasound_sensor">
+      <pose>0 0 0 0 0 0</pose>
+      <always_on>true</always_on>
+      <visualize>true</visualize>
+      <topic>/ultrasound/range</topic>
+      <update_rate>50</update_rate>
+      <ray>
+        <scan>
+          <horizontal>
+            <samples>5</samples>
+            <resolution>1.000000</resolution>
+            <min_angle>-0.12</min_angle>
+            <max_angle>0.12</max_angle>
+          </horizontal>
+          <vertical>
+            <samples>5</samples>
+            <resolution>1.000000</resolution>
+            <min_angle>-0.01</min_angle>
+            <max_angle>0.01</max_angle>
+          </vertical>
+        </scan>
+        <range>
+          <min>0.02</min>
+          <max>2</max>
+          <resolution>0.01</resolution>
+        </range>
+      </ray>
+      <plugin name="ultrasound_sensor" filename="libgazebo_ros_ray_sensor.so">
+        <ros>
+          <namespace>/ultrasound</namespace>
+          <remapping>~/out:=range</remapping>
+        </ros>
+        <output_type>sensor_msgs/Range</output_type>
+        <min_intensity>100.0</min_intensity>
+        <frame_name>ultrasound_link</frame_name>
+        <radiation_type>ultrasound</radiation_type>
+      </plugin>
+    </sensor>
+  </gazebo>
+
+  <!-- camera -->
+  <link name="camera_link">
+    <inertial>
+      <origin xyz="0 0 0" rpy="0 0.24 0" />
+      <mass value="${camera_weight}" />
+      <inertia
+        ixx="${(camera_weight / 12) * (camera_width ** 2 + camera_height ** 2)}" ixy="0.0" ixz="0.0"
+        iyy="${(camera_weight / 12) * (camera_length ** 2 + camera_height ** 2)}" iyz="0.0"
+        izz="${(camera_weight / 12) * (camera_length ** 2 + camera_width ** 2)}" />
+    </inertial>
+    <xacro:visual_collision>
+      <content>
+        <origin xyz="0 0 0" rpy="0 0.24 0" />
+        <geometry>
+          <box size="${camera_length} ${camera_width} ${camera_height}" />
+        </geometry>
+      </content>
+    </xacro:visual_collision>
+  </link>
+  <!-- https://classic.gazebosim.org/tutorials?tut=ros_gzplugins&cat=connect_ros#Camera -->
+  <gazebo reference="camera_link">
+    <sensor type="camera" name="camera_sensor1">
+      <update_rate>30.0</update_rate>
+      <camera name="head">
+        <horizontal_fov>1.67552</horizontal_fov>
+        <image>
+          <width>640</width>
+          <height>480</height>
+          <format>R8G8B8</format>
+        </image>
+        <clip>
+          <near>0.02</near>
+          <far>300</far>
+        </clip>
+        <noise>
+          <type>gaussian</type>
+          <mean>0.0</mean>
+          <stddev>0.007</stddev>
+        </noise>
+      </camera>
+      <plugin name="camera_controller" filename="libgazebo_ros_camera.so">
+        <alwaysOn>true</alwaysOn>
+      </plugin>
+    </sensor>
+  </gazebo>
+
+  <joint name="camera_joint" type="fixed">
+    <origin xyz="${camera_pos}" rpy="0 0 0" />
+    <parent link="base_link" />
+    <child link="camera_link" />
+  </joint>
+
+  <!-- 3D camera from https://github.com/osrf/gazebo_models/blob/master/orbbec_astra_camera/model.sdf -->
+  <link name="depth_camera_link">
+    <inertial>
+      <origin xyz="0 0 0" rpy="0 0 0" />
+      <mass value="0.22" />
+      <inertia
+        ixx="0.000513887" ixy="0.0" ixz="0.0"
+        iyy="0.00008685" iyz="0.0"
+        izz="0.00050009" />
+    </inertial>
+    <collision>
+      <geometry>
+        <box size="0.06 0.17 0.048" />
+      </geometry>
+    </collision>
+    <visual>
+      <geometry>
+        <mesh filename="model://orbbec_astra_camera/meshes/orbbec_astra_camera.dae" />
+      </geometry>
+    </visual>
+  </link>
+
+  <gazebo reference="depth_camera_link">
+    <sensor name="depth_camera" type="depth">
+      <pose>0.035 0.015 0.008 0 0 0</pose>
+      <update_rate>30</update_rate>
+      <camera>
+        <horizontal_fov>1.0472</horizontal_fov>
+        <image>
+          <width>640</width>
+          <height>480</height>
+          <format>R8G8B8</format>
+        </image>
+        <clip>
+          <near>0.6</near>
+          <far>8</far>
+        </clip>
+      </camera>
+
+      <plugin name="depth_camera_controller" filename="libgazebo_ros_camera.so">
+        <alwaysOn>true</alwaysOn>
+        <frame_name>camera_depth_link_optical</frame_name>
+      </plugin>
+    </sensor>
+  </gazebo>
+
+  <joint name="camera_depth_optical_joint" type="fixed">
+    <!-- these values have to be these values otherwise the gazebo camera
+        image won't be aligned properly with the frame it is supposedly
+        originating from-->
+    <origin xyz="0 0 0" rpy="${-pi/2} 0 ${-pi/2}"/>
+    <parent link="depth_camera_link"/>
+    <child link="camera_depth_link_optical"/>
+  </joint>
+
+  <link name="camera_depth_link_optical">
+  </link>
+
+  <joint name="depth_camera_joint" type="fixed">
+    <origin xyz="${depth_camera_pos}" rpy="0 0.15 0" />
+    <parent link="base_link" />
+    <child link="depth_camera_link" />
+  </joint>
+
+  <link name="imu_link">
+  </link>
+
+  <joint name="imu_joint" type="fixed">
+    <origin xyz="${imu_pos}" rpy="0 0 0" />
+    <parent link="base_link" />
+    <child link="imu_link" />
+  </joint>
+
+  <link name="wheel_encoder_link">
+  </link>
+
+  <joint name="wheel_encoder_joint" type="fixed">
+    <origin xyz="${wheel_encoder_pos}" rpy="0 0 0" />
+    <parent link="base_link" />
+    <child link="wheel_encoder_link" />
+  </joint>
+
+  <gazebo reference="depth_camera_joint">
+    <preserveFixedJoint>true</preserveFixedJoint>
+  </gazebo>
+
+  <xacro:wheel
+    pos_name="front_left"
+    pos_x="${wheel_wheelbase / 2}"
+    pos_y="${(width - wheel_width) / 2}"
+    steering="true">
+  </xacro:wheel>
+  <xacro:wheel
+    pos_name="front_right"
+    pos_x="${wheel_wheelbase / 2}"
+    pos_y="${-(width - wheel_width) / 2}"
+    steering="true">
+  </xacro:wheel>
+  <xacro:wheel
+    pos_name="rear_left"
+    pos_x="${-wheel_wheelbase / 2}"
+    pos_y="${(width - wheel_width) / 2}"
+    steering="false">
+  </xacro:wheel>
+  <xacro:wheel
+    pos_name="rear_right"
+    pos_x="${-wheel_wheelbase / 2}"
+    pos_y="${-(width - wheel_width) / 2}"
+    steering="false">
+  </xacro:wheel>
+
+  <gazebo>
+    <plugin name="gazebo_ros_ackermann_drive" filename="libgazebo_ros_ackermann_drive.so">
+
+      <!-- ros>
+        <namespace>slash</namespace>
+        <remapping>cmd_vel:=cmd_slash</remapping>
+        <remapping>odom:=odom</remapping>
+        <remapping>distance:=distance_slash</remapping>
+      </ros -->
+
+      <update_rate>100.0</update_rate>
+
+      <!-- wheels -->
+      <front_left_joint>wheel_front_left_chassis_joint</front_left_joint>
+      <front_right_joint>wheel_front_right_chassis_joint</front_right_joint>
+      <rear_left_joint>wheel_rear_left_chassis_joint</rear_left_joint>
+      <rear_right_joint>wheel_rear_right_chassis_joint</rear_right_joint>
+      <left_steering_joint>wheel_front_left_steering_joint</left_steering_joint>
+      <right_steering_joint>wheel_front_right_steering_joint</right_steering_joint>
+
+      <!-- Max absolute steer angle for tyre in radians-->
+      <!-- Any cmd_vel angular z greater than this would be capped -->
+      <max_steer>0.7854</max_steer>
+
+      <!-- Max absolute steering angle of steering wheel -->
+      <max_steering_angle>7.85</max_steering_angle>
+
+      <!-- Max absolute linear speed in m/s -->
+      <max_speed>14</max_speed>
+
+      <!-- PID tuning -->
+      <left_steering_pid_gain>1 0 0</left_steering_pid_gain>
+      <left_steering_i_range>0 0</left_steering_i_range>
+      <right_steering_pid_gain>1 0 0</right_steering_pid_gain>
+      <right_steering_i_range>0 0</right_steering_i_range>
+      <linear_velocity_pid_gain>0.5 2 0</linear_velocity_pid_gain>
+      <linear_velocity_i_range>0 0</linear_velocity_i_range>
+
+      <!-- output -->
+      <publish_odom>true</publish_odom>
+      <publish_odom_tf>true</publish_odom_tf>
+      <publish_wheel_tf>true</publish_wheel_tf>
+      <publish_distance>true</publish_distance>
+
+      <odometry_frame>odom</odometry_frame>
+      <robot_base_frame>base_link</robot_base_frame>
+
+    </plugin>
+  </gazebo>
+</robot>

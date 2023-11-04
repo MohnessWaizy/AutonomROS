@@ -1,0 +1,5 @@
+<library path="autonomros_lane_detection_core">
+  <class name="nav2_costmap_2d::LaneLayer" type="nav2_costmap_2d::LaneLayer" base_class_type="nav2_costmap_2d::Layer">
+    <description>This is an example plugin which puts repeating costs gradients to costmap</description>
+  </class>
+</library>

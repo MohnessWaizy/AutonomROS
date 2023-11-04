@@ -1,0 +1,24 @@
+---
+- name: Install udev rules
+  become: true
+  ansible.builtin.copy:
+    src: 558-orbbec-usb.rules
+    dest: /etc/udev/rules.d/558-orbbec-usb.rules
+    mode: "0644"
+    owner: root
+    group: root
+
+- name: Create install directory
+  become: true
+  ansible.builtin.file:
+    owner: root
+    group: root
+    mode: "0755"
+    path: /opt/AstraSDK/
+    state: directory
+
+- import_tasks: amd64.yml
+  when: board is not defined or not board
+
+- import_tasks: arm64.yml
+  when: board is defined and board

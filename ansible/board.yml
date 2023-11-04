@@ -1,0 +1,15 @@
+---
+- hosts: boards
+  roles:
+    - role: boardcommon
+      tags:
+        - boardcommon
+    - role: ros
+      tags:
+        - ros
+    - role: astrasdk
+      tags:
+        - astrasdk
+  vars:
+    main_user_name: 'xilinx'
+    board: true

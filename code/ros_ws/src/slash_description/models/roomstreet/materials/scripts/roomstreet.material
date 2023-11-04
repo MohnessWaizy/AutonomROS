@@ -1,0 +1,15 @@
+material roomstreet/Image
+{
+	technique
+	{
+		pass
+		{
+
+			texture_unit
+			{
+				texture roomstreet.png
+				
+			}
+		}
+	}
+}
