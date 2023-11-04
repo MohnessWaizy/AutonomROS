@@ -1,5 +1,9 @@
 # AutonomROS: Autonomous Car Swarm with Hardware-accelerated ROS Programming
 
+## Paper @ IRC-2023:
+[Paper: AutonomROS: A ReconROS-based Autonomonous Driving Unit](https://arxiv.org/pdf/2309.02026.pdf)
+
+
 We present an Ackermann-based autonomous driving robot car based on  an [ROS 2](https://docs.ros.org/en/galactic/index.html) architecture alongside accelerated computationally intensive components using hardware acceleration through [ReconROS](https://github.com/Lien182/ReconROS) on an [Zynq UltraScale+ MPSoC ZCU104](https://www.xilinx.com/products/boards-and-kits/zcu104.html) FPGA board. First, our robot car can drive in a lane at a predefined speed. Second, it can detect obstacles and avoid collisions by stopping. Third, our car prevents intersection collisions with other vehicles by communicating via Wifi to a virtual traffic light offering smooth intersection coordination. Finally, since our developed architecture builds upon [Navigation 2 (Nav2)](https://navigation.ros.org/), a commonly used ROS 2 framework, we provide smooth integration and extendability. Furthermore, we accelerated three computationally intensive architecture components, lane detection, point cloud calculation, and obstacle detection, to save CPU time. In addition, we discovered that leveraging shared memory through [Iceoryx](https://iceoryx.io/latest/) as the ROS 2 middleware further reduced CPU time. Hence, we extended ReconROS’s capabilities by
 making it compatible with Iceoryx.
 
