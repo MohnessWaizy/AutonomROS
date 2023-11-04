@@ -4,19 +4,19 @@ We present an Ackermann-based autonomous driving robot car based on  an [ROS 2](
 making it compatible with Iceoryx.
 
 <div align="center">
-  <img height="300" src="documentation/fig/Hardware/Car_Front_Right.PNG">
+  <img height="300" src="fig/Hardware/Car_Front_Right.PNG">
 </div>
 
 <div align="center">
-    <img src="documentation/fig/Hardware/Car_Front.PNG" height="100">
-    <img src="documentation/fig/Hardware/Car_Back.PNG"  height="100">
-    <img src="documentation/fig/Hardware/Car_Right_Side.PNG" height="100">
-    <img src="documentation/fig/Hardware/Car_Left_Side.PNG" height="100">
+    <img src="fig/Hardware/Car_Front.PNG" height="100">
+    <img src="fig/Hardware/Car_Back.PNG"  height="100">
+    <img src="fig/Hardware/Car_Right_Side.PNG" height="100">
+    <img src="fig/Hardware/Car_Left_Side.PNG" height="100">
 </div>
 
 <div align="center">
-    <img src="documentation/fig/lab_environment.jpeg" height="200">
-    <img src="documentation/fig/intersectionMap.png" height="200">
+    <img src="fig/lab_environment.jpeg" height="200">
+    <img src="fig/intersectionMap.png" height="200">
 </div>
 
 ## Demo Video
